@@ -17,13 +17,13 @@ if( true /* check for admin later */ ) {
     if( $select_result->num_rows == 1 ) {
         $new_pw_query = 'update passwords '
             . "set password = \"$password\" "
-            . "where id = \"$id\"";
+            . "where faculty_id = \"$id\"";
     } else {
         $new_pw_query = 'insert into passwords ( faculty_id, password  ) '
             . "values( \"$id\", \"$password\" )";
     }
     
-    print $new_pw_query;
-    //$new_pw_result = $db->query( $new_pw_query );
-    print $new_pw_result->affected_rows;
+    //print $new_pw_query;
+    $new_pw_result = $db->query( $new_pw_query );
+    print $db->affected_rows;
 }

@@ -123,6 +123,10 @@ if( true /* an admin is logged in */ ) {
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 You have changed <?php echo $fac->f;?>'s password.
             </div>
+            <div id="failure<?php echo $fac->id;?>" class="alert alert-error" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <?php echo $fac->f;?>'s password was not changed.  Something went wrong.
+            </div>
         </td>
     </tr>
     
@@ -193,6 +197,8 @@ if( true /* an admin is logged in */ ) {
                 function(data){
                     if( data == 1 ) {
                         $('div#success' + id ).fadeIn();
+                    } else {
+		        $('div#failure' + id ).fadeIn();
                     }
                 }
             )
