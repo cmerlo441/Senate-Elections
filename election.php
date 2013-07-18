@@ -9,7 +9,18 @@ $election_query = 'select * from elections '
     . "where id = $election_id";
 $election_result = $db->query( $election_query );
 $election = $election_result->fetch_object( );
-$people = ( $election->winners == 1 ? '1 person' : $election->winners . ' people' );s
+$people = ( $election->winners == 1 ? '1 person' : $election->winners . ' people' );
+
+$election_start = date( 'Y-m-d H:i:s', strtotime( $election->start_time ) );
+$election_end   = date( 'Y-m-d H:i:s', strtotime( $election->end_time ) );
+$now            = date( 'Y-m-d H:i:s' );
+
+$current = $now >= $election_start && $now <= $election_end;
+
+$end_time = date( 'F j, Y', strtotime( $election->end_time ) );
+if( $end_time == date( 'Y-m-d' ) ) {
+    $end_time = 'Today';
+}
 
 // dialog box
 
@@ -22,7 +33,7 @@ $people = ( $election->winners == 1 ? '1 person' : $election->winners . ' people
 ?>
       <div class="row-fluid">
         <div class="span12">
-          <h1><?php echo $election->title; ?> <small>Ends <?php echo date( 'F j, Y', strtotime( $election->end_time ) ); ?></small></h1>
+          <h1><?php echo $election->title; ?> <small>End<?php echo ( $current ? 's ' : 'ed ' ) . $end_time; ?></small></h1>
           <p>This election will choose <?php echo $people; ?> for the position of <?php echo $election->title; ?>.</p>          
         </div>
       </div>
@@ -78,8 +89,18 @@ while( $candidate = $candidates_result->fetch_object( ) ) {
 ?>
       <div class="row-fluid" style="padding-top: 2em;">
         <div class="span12 well">
+<?php
+    if( $current ) {
+?>
           <p>When you are ready, click this button to vote for the candidates you've turned blue.</p>
           <button class='btn btn-success btn-large btn-block' id='vote'>Vote</button>
+<?php
+    } else {
+?>
+          <p>This election has already ended.</p>
+<?php
+    }
+?>
         </div>
       </div>
       
@@ -87,7 +108,7 @@ while( $candidate = $candidates_result->fetch_object( ) ) {
           $(document).ready(function() {
               
               document.title = document.title + " <?php echo $election->title; ?>";
-              $('div.masthead h3').html( $('div.masthead h3').html() + " <?php echo $election->title; ?>" );
+              $('div.masthead .title').html( $('div.masthead .title').html() + " <?php echo $election->title; ?>" );
               
               $('div#candidates button').click(function(){
                   

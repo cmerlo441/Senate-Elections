@@ -125,7 +125,8 @@ if( !isset( $no_header ) ) {
 
     <div class="container">
       <div class="masthead">
-        <h3 class="muted">NCC Academic Senate Elections<?php if( isset( $title_stub ) ) print " :: $title_stub";?></h3>
+        <h3 class="title muted visible-desktop">NCC Academic Senate Elections<?php if( isset( $title_stub ) ) print " :: $title_stub";?></h3>
+        <p class="title muted hidden-desktop" style="font-weight: bold">NCC Academic Senate Elections<?php if( isset( $title_stub ) ) print " :: $title_stub";?></h3>
         <div class="navbar">
           <div class="navbar-inner">
             <div class="container">

@@ -46,13 +46,13 @@ if( true /* an admin is logged in */ ) {
       <td>
         <div class="btn-toolbar" style="margin: 0;">
           <div class="btn-group" id="name">
-            <button class="btn<?php if( $sort == '' or substr( $sort, 0, 4 ) == 'name' ) print ' btn-success';?>" id="name">Name</button>
+            <button class="sort btn<?php if( $sort == '' or substr( $sort, 0, 4 ) == 'name' ) print ' btn-success';?>" id="name">Name</button>
             <button class="btn dropdown-toggle<?php if( $sort == '' or substr( $sort, 0, 4 ) == 'name' ) print ' btn-success';?>" data-toggle="dropdown"><span class="caret"></span></button>
             <ul class="dropdown-menu">
-              <li><a href="#javascript:void(0)" id="namelastaz">Sort by Last Name A-Z</a></li>
-              <li><a href="#javascript:void(0)" id="namelastza">Sort by Last Name Z-A</a></li>
-              <li><a href="#javascript:void(0)" id="namefirstaz">Sort by First Name A-Z</a></li>
-              <li><a href="#javascript:void(0)" id="namefirstza">Sort by First Name Z-A</a></li>
+              <li><a href="#javascript:void(0)" class="sort" id="namelastaz">Sort by Last Name A-Z</a></li>
+              <li><a href="#javascript:void(0)" class="sort" id="namelastza">Sort by Last Name Z-A</a></li>
+              <li><a href="#javascript:void(0)" class="sort" id="namefirstaz">Sort by First Name A-Z</a></li>
+              <li><a href="#javascript:void(0)" class="sort" id="namefirstza">Sort by First Name Z-A</a></li>
             </ul>
           </div><!-- /btn-group -->
         </div>
@@ -61,11 +61,11 @@ if( true /* an admin is logged in */ ) {
       <td>
         <div class="btn-toolbar" style="margin: 0;">
           <div class="btn-group" id="dept">
-            <button class="btn<?php if( substr( $sort, 0, 4 ) == 'dept' ) print ' btn-success';?>" id="dept"><span class="visible-desktop">Department</span><span class="hidden-desktop">Dept.</span></button>
+            <button class="sort btn<?php if( substr( $sort, 0, 4 ) == 'dept' ) print ' btn-success';?>" id="dept"><span class="visible-desktop">Department</span><span class="hidden-desktop">Dept.</span></button>
             <button class="btn dropdown-toggle<?php if( substr( $sort, 0, 4 ) == 'dept' ) print ' btn-success';?>" data-toggle="dropdown"><span class="caret"></span></button>
             <ul class="dropdown-menu">
-              <li><a href="#javascript:void(0)" id="deptaz">Sort A-Z</a></li>
-              <li><a href="#javascript:void(0)" id="deptza">Sort Z-A</a></li>
+              <li><a href="#javascript:void(0)" class="sort" id="deptaz">Sort A-Z</a></li>
+              <li><a href="#javascript:void(0)" class="sort" id="deptza">Sort Z-A</a></li>
             </ul>
           </div><!-- /btn-group -->
         </div>
@@ -74,11 +74,11 @@ if( true /* an admin is logged in */ ) {
       <td>
         <div class="btn-toolbar" style="margin: 0;">
           <div class="btn-group" id="rank">
-            <button class="btn<?php if( substr( $sort, 0, 4 ) == 'rank' ) print ' btn-success';?>" id="rank">Rank</button>
+            <button class="sort btn<?php if( substr( $sort, 0, 4 ) == 'rank' ) print ' btn-success';?>" id="rank">Rank</button>
             <button class="btn dropdown-toggle<?php if( substr( $sort, 0, 4 ) == 'rank' ) print ' btn-success';?>" data-toggle="dropdown"><span class="caret"></span></button>
             <ul class="dropdown-menu">
-              <li><a href="#javascript:void(0)" id="rankaz">Sort A-Z</a></li>
-              <li><a href="#javascript:void(0)" id="rankza">Sort Z-A</a></li>
+              <li><a href="#javascript:void(0)" class="sort" id="rankaz">Sort A-Z</a></li>
+              <li><a href="#javascript:void(0)" class="sort" id="rankza">Sort Z-A</a></li>
             </ul>
           </div><!-- /btn-group -->
         </div>
@@ -94,8 +94,12 @@ if( true /* an admin is logged in */ ) {
 ?>
     <tr id="<?php echo $fac->id;?>">
       <td>
-        <button class="btn btn-mini facultycog"><i class="icon-cog"></i></button>
-        <span class="name"><?php echo "$fac->f $fac->l";?></span>
+        <!-- <button class="btn btn-mini facultycog hidden-phone"><i class="icon-cog"></i></button> -->
+        <span class="faculty_edit">
+            <a class="faculty_edit" href="javascript:void(0)" title="Change <?php echo $fac->f;?>'s password">
+                <?php echo "$fac->f $fac->l";?>
+            </a>
+        </span>
       </td>
       <td>
         <span class="visible-desktop"><?php echo $fac->d;?></span>
@@ -105,6 +109,21 @@ if( true /* an admin is logged in */ ) {
         <span class="visible-desktop"><?php echo $fac->r;?></span>
         <span class="hidden-desktop"><?php echo $fac->ra;?></span>
       </td>
+    </tr>
+    
+    <tr class="edit" id="edit<?php echo $fac->id;?>" style="display: none">
+        <td colspan="3">
+            <p style="font-weight: bold">Change <?php echo $fac->f;?>'s Password</p>
+            <input id="p1" type="password" placeholder="Enter the new password" />
+            <input id="p2" type="password" placeholder="Reenter the new password" />
+            <button class="btn cancel">Cancel</button>
+            <button class="btn disabled ok" id="<?php echo $fac->id;?>">OK</button>
+            
+            <div id="success<?php echo $fac->id;?>" class="alert alert-success" style="display: none">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                You have changed <?php echo $fac->f;?>'s password.
+            </div>
+        </td>
     </tr>
     
 <?php
@@ -123,7 +142,7 @@ if( true /* an admin is logged in */ ) {
         $('div#buttons button').removeClass('btn-primary');
         $('div#buttons button#faculty_list').addClass('btn-primary');
         
-        $('table#faculty_table a').click(function(){
+        $('table#faculty_table a.sort').click(function(){
             var key = $(this).attr('id');
             $.post('list_faculty.php',
                 { sort: key },
@@ -133,7 +152,7 @@ if( true /* an admin is logged in */ ) {
             )
         })
 
-        $('table#faculty_table button:not(.dropdown-toggle)').click(function(){
+        $('table#faculty_table button.sort').click(function(){
             var key = $(this).attr('id');
             var search = $('input#search').val();
                         
@@ -145,11 +164,40 @@ if( true /* an admin is logged in */ ) {
                 }
             )
         })
-        
-        $('button.facultycog').click(function(){
-            var id = $(this).parent().parent().attr('id');
-            console.log( id );
+
+        $('span.faculty_edit > a').click(function(){
+            var tr = $(this).parent().parent().parent();
+            var id = tr.attr('id');
+            var new_tr = tr.parent().children('tr#edit' + id );
+            
+            $('tr.edit').hide();
+            new_tr.fadeIn(250).addClass('warning');
         })
+        
+        $(':password').keyup(function(){
+            var id = $(this).parent().parent().attr('id');
+            var p1 = $('tr#' + id + ' > td > input#p1').val();
+            var p2 = $('tr#' + id + ' > td > input#p2').val();
+            if( p1 == p2 && p1.trim() != '' )
+                $('tr#' + id + ' > td > button.ok').removeClass( 'disabled' ).addClass('btn-primary');
+            else
+                $('tr#' + id + ' > td > button.ok').addClass( 'disabled' ).removeClass('btn-primary');
+        })
+        
+        $('button.ok').click(function(){
+            var id = $(this).attr('id');
+            var pw = $(this).siblings('#p1').val();
+            
+            $.post('set_faculty_password.php',
+                { id: id, pw: pw },
+                function(data){
+                    if( data == 1 ) {
+                        $('div#success' + id ).fadeIn();
+                    }
+                }
+            )
+        })
+        
     })
 </script>
 <?php
