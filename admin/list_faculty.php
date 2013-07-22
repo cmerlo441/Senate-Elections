@@ -113,7 +113,9 @@ if( true /* an admin is logged in */ ) {
     
     <tr class="edit" id="edit<?php echo $fac->id;?>" style="display: none">
         <td colspan="3">
-            <p style="font-weight: bold">Change <?php echo $fac->f;?>'s Password</p>
+            <p style="font-weight: bold">Change <?php echo $fac->f;?>'s Password
+	            <span class="text-right"><button class="btn close">&times;</button></span>
+        	</p>
             <input id="p1" type="password" placeholder="Enter the new password" />
             <input id="p2" type="password" placeholder="Reenter the new password" />
             <button class="btn cancel">Cancel</button>
@@ -198,10 +200,16 @@ if( true /* an admin is logged in */ ) {
                     if( data == 1 ) {
                         $('div#success' + id ).fadeIn();
                     } else {
-		        $('div#failure' + id ).fadeIn();
+		        		$('div#failure' + id ).fadeIn();
                     }
+                    $('button.ok').hide();
+                    $('button.cancel').hide();
                 }
             )
+        })
+        
+        $('tr.edit > td > p > span > button.close').click(function(){
+        	$(this).parent().parent().parent().parent().slideUp();
         })
         
     })
