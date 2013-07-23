@@ -2,7 +2,8 @@
 
 require_once( '.htpasswd' );
 
-$docroot = "http://torvalds.matcmp.ncc.edu/senate_elections";
+//$docroot = "http://torvalds.matcmp.ncc.edu/senate_elections";
+$docroot = "http://localhost/senate_elections";
 
 $title = "NCC Academic Senate Elections";
 if( isset( $title_stub ) ) {

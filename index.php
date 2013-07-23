@@ -25,7 +25,7 @@ require_once( './_header.inc' );
         <div class="span4">
           <h2>Behind The Scenes</h2>
           <p>If you help manage the elections, use the button below to log in.</p>
-          <p><a class="btn btn-danger" href="admin">Log In As Administrator &raquo;</a></p>
+          <p><a class="btn btn-danger" href="<?php echo $docroot;?>/admin">Log In As Administrator &raquo;</a></p>
         </div>
       </div>
       <div class="row-fluid hidden-desktop">
